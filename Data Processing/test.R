@@ -43,10 +43,13 @@ df2$emp <- number(df2$emp, accuracy = 1, big.mark = ",")
 
 
 
+# Download Employment data from Statcan
+df4 <- statcan_download_data("14-10-0287-03", "eng")
+
+unique(df4$'Labour force characteristics')
 
 
-
-
-rm(df2) 
-
+## Labour force keep employment, full time and part time employment. 
+## Get different dataset to examine sectors. 
+## Keep the variable name as VALUE
 

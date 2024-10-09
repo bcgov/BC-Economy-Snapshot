@@ -13,42 +13,36 @@ library(scales)
 library(formattable)
 
 # Download Employment data from Statcan
-df1 <- statcan_download_data("14-10-0355-02", "eng")
-
-# Put the date variable into date format (not string) and then remove REF_DATE
-df1      <- df1 %>% mutate(date = ymd(REF_DATE)) %>% select(-REF_DATE)
-df1$year <- year(df1$date)
+emp_ind <- statcan_download_data("14-10-0355-02", "eng")
 
 
-# Keep obs with certain characteristics
-df1 <- df1 %>%
+# Clean data
+emp_ind <- emp_ind %>%
+ 
+   # Convert date and extract year
+  mutate(date = ymd(REF_DATE),
+         year = year(date)) %>%
+ 
+   # Filter the data based on relevant criteria
   filter(
-    Statistics   == "Estimate",            # Filter for Statistic type
-    `Data type`  == "Seasonally adjusted", # Filter seasonally adjusted 
-    date         >= as.Date("2010-01-01")  # Filter for dates 2023 onwards
-  )
-
-# Reduce size of the dataset so keep only relevant variables. 
-df1 <- df1 %>%
-  select(date, year, GEO, `North American Industry Classification System (NAICS)`, VALUE)
-
-# Rename vars 
-df1 <- df1 %>%
-  rename(naics = `North American Industry Classification System (NAICS)`,
-         value = VALUE)
-
-# Convert 'value' from thousands to actual numbers
-df1 <- df1 %>%
-  mutate(value = as.numeric(value) * 1000)
-
-# Sort df1 by GEO (alphabetically) and date (chronologically)
-df1 <- df1 %>%
-  arrange(GEO, date)
+     Statistics == "Estimate",
+    `Data type` == "Seasonally adjusted",
+    date        >= as.Date("2010-01-01")
+  ) %>%
+ 
+   # Select and rename variables
+  select(date, year, geo = GEO, naics = `North American Industry Classification System (NAICS)`, value = VALUE) %>%
+ 
+   # Convert 'value' from thousands to actual numbers
+  mutate(value = as.numeric(value) * 1000) %>%
+ 
+   # Sort the data by geo and date
+  arrange(geo, date)
 
 
 # Browse BC data and compare to previous data downloaded to ensure no mistake. 
 # historical data should be the same. 
-# df_bc <- df1 %>%
+# df_bc <- emp_ind %>%
 #   filter(GEO    == "British Columbia", 
 #         naics  == "Total employed, all industries") %>%
 #  select(date, year, GEO, naics, value)  # Select only relevant columns
@@ -67,4 +61,17 @@ df1 <- df1 %>%
 ## Labour force keep employment, full time and part time employment. 
 ## Get different dataset to examine sectors. 
 ## Keep the variable name as VALUE
+
+
+
+
+
+
+
+
+
+
+
+
+
 

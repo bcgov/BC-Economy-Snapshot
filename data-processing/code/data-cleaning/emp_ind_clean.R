@@ -3,6 +3,8 @@
 # This code will import the data from StatCan
 # and clean and tidy it
 
+install.packages("here")
+
 # Load in relevant libraries 
 library(statcanR)
 library(dplyr)
@@ -11,6 +13,7 @@ library(lubridate)
 library(stringr)
 library(scales)
 library(formattable)
+library(here)
 
 # Download Employment data from Statcan
 emp_ind <- statcan_download_data("14-10-0355-02", "eng")
@@ -43,8 +46,7 @@ emp_ind <- emp_ind %>%
   arrange(geo, date)
 
 # Send cleaned data to folder on GitHub
-write.csv(emp_ind, "C:/Users/DOLAWLOR/BC-Economy-Snapshot/data-processing/data/emp_ind.csv", row.names = FALSE)
-
+write.csv(emp_ind, here("data-processing", "data", "emp_ind.csv"), row.names = FALSE)
 
 ### IGNORE - Notes to remember to check and compare data to published sources like BC stats on employment
 # Browse BC data and compare to previous data downloaded to ensure no mistake. 

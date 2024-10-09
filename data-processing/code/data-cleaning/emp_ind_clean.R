@@ -43,8 +43,6 @@ emp_ind <- emp_ind %>%
   arrange(geo, date)
 
 # Send cleaned data to folder on GitHub
-write.csv(emp_ind, "C:/Users/DOLAWLOR/BC-Economy-Snapshot/data-processing/data/emp_ind.csv", row.names = FALSE)
-
 write.csv(emp_ind, here("data-processing", "data", "emp_ind.csv"), row.names = FALSE)
 
 ### IGNORE - Notes to remember to check and compare data to published sources like BC stats on employment

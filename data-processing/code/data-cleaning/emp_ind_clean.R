@@ -25,7 +25,7 @@ emp_ind <- emp_ind %>%
  
    # Filter the data based on relevant criteria
   filter(
-     Statistics == "Estimate",
+    Statistics  == "Estimate",
     `Data type` == "Seasonally adjusted",
     date        >= as.Date("2010-01-01")
   ) %>%
@@ -39,7 +39,14 @@ emp_ind <- emp_ind %>%
    # Sort the data by geo and date
   arrange(geo, date)
 
+emp_ind <- emp_ind %>%
+  arrange(geo, date)
 
+# Send cleaned data to folder on GitHub
+write.csv(emp_ind, "C:/Users/DOLAWLOR/BC-Economy-Snapshot/data-processing/data/emp_ind.csv", row.names = FALSE)
+
+
+### IGNORE - Notes to remember to check and compare data to published sources like BC stats on employment
 # Browse BC data and compare to previous data downloaded to ensure no mistake. 
 # historical data should be the same. 
 # df_bc <- emp_ind %>%

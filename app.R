@@ -33,17 +33,13 @@ library(ggrepel)
 
 options(scipen = 999999999)  
 
-# source("Standard-Charts.R")
-# 
-# 
-# source("home-ui1.R")
-# 
-source(here("Charts/employment-charts.R"))
-source(here("UI/ui_home.R"))
 
-# source("Employment-ui.R")
-# source("Employment-server.R")
-# source("Executive_summaries.R")
+source(here("Charts/employment-charts.R"))
+source(here("Charts/standard-charts.R"))
+source(here("UI/home_ui.R"))
+source(here("UI/employment-ui.R"))
+source(here("Server/employment-server.R"))
+source(here("data-processing/texts/Executive_summaries.R"))
 
 
 # Loading data ----
@@ -165,12 +161,12 @@ ui <- function() {
         navbarMenu(
           "Employment",
           tabPanel(
-            "Employment 6 Overview",
-            # ui_employment_home(
-            #   m6_employment_lineplot_data(df_m6_RnD_1),
-            # )
+            "Employment Overview",
+            ui_employment_home(
+              employment_emp_ind_lineplot_data(emp_ind_df),
+            )
           ),
-            # tabPanel("\xE2\x96\xB6 Investment in Innovation", ui_m6_RnD(df_m6_RnD_1, df_m6_RnD_2)),
+            tabPanel("\xE2\x96\xB6 Employment Industry", ui_employment_emp_ind(emp_ind_df)),
             # tabPanel("\xE2\x96\xB6 Value-added Export", ui_m6_VAEX(df_m6_VAEX_1)),
             # tabPanel("\xE2\x96\xB6 Non-residential Investment", ui_m6_nRinv(df_m6_nRinv_1)),
             # tabPanel("\xE2\x96\xB6 Labour Productivity", ui_m6_LP(df_m6_LP_1)),
@@ -187,8 +183,8 @@ ui <- function() {
 
 # Server----
 server <- function(input, output, session) {
-  # server_employment_home(df_m6_RnD_1, df_m6_LP_1, df_m6_VAEX_1, df_m6_nRinv_1, df_m6_EXP_1, output, input, session)
-  # employment_emp_ind_server( Exesum_m6_RnD_main,Exesum_m6_RnD, df_m6_RnD_1, df_m6_RnD_2, output, input)
+  server_employment_home(emp_ind_df, output, input, session)
+  employment_emp_ind_server( Exesum_employment_emp_ind_main, Exesum_employment_emp_ind, emp_ind_df, output, input)
   }
 
 

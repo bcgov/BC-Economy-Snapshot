@@ -163,7 +163,7 @@ ui <- function() {
           tabPanel(
             "Employment Overview",
             ui_employment_home(
-              employment_emp_ind_lineplot_data(emp_ind_df),
+              employment_emp_ind_lineplot_data(emp_ind_df)
             )
           ),
             tabPanel("\xE2\x96\xB6 Employment Industry", ui_employment_emp_ind(emp_ind_df)),

@@ -97,7 +97,10 @@ plot_and_triangle <- function(data, plot_data_func, plot_output_id, button_input
   
   output[[triangle_output_id]] <- renderUI({
     dff <- plot_data_func(data)
-    Sign <- sign(dff$VALUE[dff$Year == unique(dff$Year)[length(unique(dff$Year))]] - dff$VALUE[dff$Year == unique(dff$Year)[length(unique(dff$Year))-1]])
+    dff <- dff[order(dff$date), ]
+    last_value <- dff$value[nrow(dff)]
+    second_last_value <- dff$value[nrow(dff) - 1]
+    Sign <- sign(last_value - second_last_value)
     div(class = get_triangle_class(Sign))
   })
 }
@@ -106,9 +109,11 @@ plot_and_triangle <- function(data, plot_data_func, plot_output_id, button_input
 
 dash_lineplot <- function(data_func, df, input, y_label = "") {
   df1 <- data_func(df)
-  tickvals <- seq(from = 2000, to = max(df1$Year), by = 5)
+  df1$date <- as.Date(df1$date)
   
-  p1 <- plot_ly(data = df1, x = ~Year, y = ~VALUE, type = 'scatter', mode = 'lines',
+  tickvals <- seq(from = max(df1$date) - 60, to = max(df1$date), by = 5)
+  
+  p1 <- plot_ly(data = df1, x = ~date, y = ~value, type = 'scatter', mode = 'lines',
                 line = list(color = "#FEB70D", width = 4)) %>%
     layout(
       xaxis = list(
@@ -132,20 +137,20 @@ dash_lineplot <- function(data_func, df, input, y_label = "") {
       ),
       annotations = list(
         list(
-          x = df1$Year[1],
-          y = df1$VALUE[1],
-          text = paste(format(df1$VALUE[1], big.mark = ",")),
+          x = df1$date[1],
+          y = df1$value[1],
+          text = paste(format(df1$value[1], big.mark = ",")),
           showarrow = TRUE,
           arrowcolor = "white",
           font = list(color = "white")
         ),
         list(
-          x = df1$Year[length(df1$Year)],
-          y = df1$VALUE[length(df1$VALUE)],
+          x = df1$date[length(df1$date)],
+          y = df1$value[length(df1$value)],
           text = paste(
-            format(df1$VALUE[length(df1$VALUE)], big.mark = ","),
+            format(df1$value[length(df1$value)], big.mark = ","),
             "\n",
-            "<span style='font-size:7px;'>(", df1$Year[length(df1$VALUE)], ")</span>"
+            "<span style='font-size:7px;'>(", df1$date[length(df1$value)], ")</span>"
           ),
           showarrow = TRUE,
           arrowcolor = "white",
@@ -323,17 +328,18 @@ dash_lineplot <- function(data_func, df, input, y_label = "") {
 wormchart <- function(data, label) {
   
   add_data_labels <- function(data, variable) {
-    data$label <- ifelse(data$Year == max(data$Year), round(data[[variable]], 2), NA)
+    data$label <- ifelse(data$date == max(data$date), round(data[[variable]], 2), NA)
     data
   }
-  plot_data <- add_data_labels(data, "VALUE")
-  ggplot(plot_data, aes(x = Year, y = VALUE)) +
+  plot_data <- add_data_labels(data, "value")
+  ggplot(plot_data, aes(x = date, y = value, group = 1)) +
     geom_line(color = "#003366", size = 1.5) +
-    geom_point(data = subset(plot_data, !is.na(label)), aes(x = Year, y = VALUE), color = "#003366", size = 3) +
-    # geom_text(data = subset(plot_data, !is.na(label)), aes(label = label),
-    #           hjust = 1.2, vjust = -0.5, size = 8, color =  "#FEB70D",
-    #           family = "Aptos(Body)") +  # Set font and make it bold
-    geom_segment(data = subset(plot_data, !is.na(label)), aes(x = Year, xend = Year, y = VALUE, yend = label), color = "#003366", size = 0.5) +
+    geom_point(data = subset(plot_data, !is.na(label)), aes(x = date, y = value), color = "#003366", size = 3) +
+    geom_text(data = subset(plot_data, !is.na(label)), aes(label = label),
+              hjust = 1.2, vjust = -0.5, size = 8, color =  "#FEB70D",
+              family = "Aptos(Body)"
+              ) +  
+    geom_segment(data = subset(plot_data, !is.na(label)), aes(x = date, xend = date, y = value, yend = label), color = "#003366", size = 0.5) +
     labs(title = NULL, x = NULL, y = NULL) +
     theme_void() +
     theme(
@@ -355,8 +361,8 @@ wormchart_ui <- function(df, button,  title, worm, triangle){
              class = "custom-box",
              h4(title , class = "custom-title"),
              div(class = "indicator-content",
-                 plotOutput(worm, height = "100px", width = "70%"),  # Plot output directly in the box
-                 div(class = "year-label", max(df$Year)),
+                 plotOutput(worm, height = "100px", width = "70%"), 
+                 div(class = "year-label", max(df$date)),
                  uiOutput(triangle)
              )
            

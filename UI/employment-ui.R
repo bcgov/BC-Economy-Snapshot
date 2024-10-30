@@ -13,10 +13,10 @@
 # limitations under the License.
 
 ### Home ----
-ui_employment_home <- function(df1){
+ui_employment_home <- function(df1) {
   tabItem(tabName = "employment_home",
           fluidPage(
-            #CSS Code ----
+            # CSS Code ----
             tags$head(
               tags$style(HTML("
       .main-title {
@@ -107,23 +107,25 @@ ui_employment_home <- function(df1){
     "))
             ),
             #----
-            div(
-              actionButton("employment_to_homepage", label = "Employment and Job Market", class = "main-title")
-            ),
+            # div(
+            #   actionButton("employment_to_homepage", label = "Employment and Job Market", class = "main-title")
+            # ),
             div(style = "height: 10px;"),  # Space between title and first row of boxes
             fluidRow(
               wormchart_ui(df = df1,
                            button = "employment_emp_ind_homepage_button",
                            title = "Industry Employment",
                            worm = "employment_homepage_worm_emp_ind",
-                           triangle = "employment_homepage_triangle_emp_ind"),
-
+                           triangle = "employment_homepage_triangle_emp_ind")
             ),
             div(style = "height: 20px;"),  # Space between first and second rows of boxes
             fluidRow(
-
+              # Add content for the second row here
             )
-          ))}
+          )
+  )
+}
+
 
 ### emp_ind ----
 ui_employment_emp_ind <- function(df1) {

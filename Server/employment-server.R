@@ -18,8 +18,13 @@
 
 server_employment_home <- function(emp_ind_df,
                            output, input, session) {
-  
-  plot_and_triangle(emp_ind_df, employment_emp_ind_lineplot_data, "employment_homepage_worm_emp_ind", "employment_emp_ind_homepage_button","emp_ind", "employment_homepage_triangle_emp_ind", output, input, session)
+  plot_and_triangle(data = emp_ind_df, 
+                    plot_data_func = employment_emp_ind_lineplot_data, 
+                    plot_output_id = "employment_homepage_worm_emp_ind", 
+                    button_input_id = "employment_emp_ind_homepage_button",
+                    tab_name = "emp_ind", 
+                    triangle_output_id = "employment_homepage_triangle_emp_ind", 
+                    output, input, session)
                 
   
 }

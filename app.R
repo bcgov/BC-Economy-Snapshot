@@ -168,7 +168,7 @@ ui <- function() {
             )
           ),
             tabPanel("\xE2\x96\xB6 Employment Industry", ui_employment_emp_ind(emp_ind_df)),
-            # tabPanel("\xE2\x96\xB6 Value-added Export", ui_m6_VAEX(df_m6_VAEX_1)),
+            # tabPanel("\xE2\x96\xB6 Unemployment Rate", ui_m6_VAEX(df_m6_VAEX_1)),
             # tabPanel("\xE2\x96\xB6 Non-residential Investment", ui_m6_nRinv(df_m6_nRinv_1)),
             # tabPanel("\xE2\x96\xB6 Labour Productivity", ui_m6_LP(df_m6_LP_1)),
             # tabPanel("\xE2\x96\xB6 Export", ui_m6_EXP(df_m6_EXP_1, df_m6_EXP_3))

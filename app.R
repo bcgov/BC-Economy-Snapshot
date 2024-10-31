@@ -152,6 +152,7 @@ ui <- function() {
   ")),
     header_content,
     custom_header,
+    #----
     navbarPage(
       title = NULL,
       id = "tabs",

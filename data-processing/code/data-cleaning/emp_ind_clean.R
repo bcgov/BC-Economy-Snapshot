@@ -42,10 +42,12 @@ emp_ind <- emp_ind %>%
   # Create a hierarchical categorical variable
   mutate(parent_sector = case_when(
     naics == "Total employed, all industries" ~ "all industries",
-    naics == "Goods-producing sector" ~ "business sector industries",
+    naics == "Goods-producing sector"         ~ "business sector industries",
+    
     naics %in% c("Agriculture", "Forestry, fishing, mining, quarrying, oil and gas", 
                  "Utilities", "Construction", "Manufacturing") ~ "goods producing",
-    naics == "Services-producing sector" ~ "business sector industries",
+    
+    naics   == "Services-producing sector" ~ "business sector industries",
     naics %in% c("Wholesale and retail trade", "Transportation and warehousing", 
                  "Finance, insurance, real estate, rental and leasing", 
                  "Professional, scientific and technical services", 
@@ -54,6 +56,7 @@ emp_ind <- emp_ind %>%
                  "Information, culture and recreation", 
                  "Accommodation and food services", 
                  "Other services (except public administration)") ~ "service producing",
+    
     naics == "Public administration" ~ "government sector",
     TRUE ~ NA_character_  # Default case for unclassified naics
   )) %>%

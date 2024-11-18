@@ -13,9 +13,19 @@
 # limitations under the License.
 # Loading data----
     load_emp_ind <- function() {
-      data <- read.csv(here("data-processing/data/emp_ind.csv"), header = TRUE)
-      data <- na.omit(data)
-      return(data)
+      emp_data   <- read.csv(here("data-processing/data/emp_ind.csv")       , header = TRUE)
+      job_gains  <- read.csv(here("data-processing/data/emp_job_gains.csv") , header = TRUE)
+      job_losses <- read.csv(here("data-processing/data/emp_job_losses.csv"), header = TRUE)
+      
+      # Ensure no missing values
+      emp_data   <- na.omit(emp_data)
+      job_gains  <- na.omit(job_gains)
+      job_losses <- na.omit(job_losses)
+      
+      # Return all the datasets in a named list
+      
+      return(list(emp_data = emp_data, job_gain = job_gains, job_losses = job_losses))
+      
     }
     
 
@@ -24,7 +34,7 @@
     
     employment_emp_ind_lineplot_data <- function(df){
       df |>
-        filter(geo == "British Columbia",
+        filter(geo   == "British Columbia",
                naics == "Total employed, all industries") |>
         select(date, value)
       
@@ -33,12 +43,12 @@
     employment_emp_ind_render_lineplot <- function(df, input){
       dash_lineplot(employment_emp_ind_lineplot_data, df, input, "Persons")}
     
-    ## table----
+    ## table ----
     employment_emp_ind_table_data <- function(df, year, geo, parent){
        df |>
         filter(
-          date == max(df$date),
-          geo == geo,
+          date          == max(df$date),
+          geo           == geo,
           parent_sector == parent)
     }
     
@@ -48,4 +58,8 @@
                     caption = htmltools::tags$caption("",
                                                       style = "font-family: Arial; font-size: 12px;"))
     }
+    
+
+    
+    
     

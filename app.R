@@ -43,7 +43,12 @@ source(here("data-processing/texts/Executive_summaries.R"))
 
 
 # Loading data ----
-emp_ind_df <- load_emp_ind()
+loaded_data   <- load_emp_ind()
+
+# Extract individual datasets from loaded dataset
+  emp_ind_df <- loaded_data$emp_data
+  job_gains  <- loaded_data$job_gains
+  job_losses <- loaded_data$job_losses 
 
 # UI ----
 ui <- function() {
@@ -138,13 +143,13 @@ ui <- function() {
     tags$style(HTML("
     .navbar-default {
       background-color: #3C8DBC; /* Background color */
-      border-color: #3C8DBC; /* Border color */
+      border-color:     #3C8DBC; /* Border color */
     }
     .navbar-default .navbar-nav > li > a {
-      color: #fff; /* Link color */
+      color: #fff;               /* Link color */
     }
     .navbar-default .navbar-brand {
-      color: #fff; /* Brand text color */
+      color: #fff;               /* Brand text color */
     }
     .navbar-default .navbar-nav > li > a:hover {
       background-color: #fcba19; /* Hover color */
@@ -184,8 +189,12 @@ ui <- function() {
 
 # Server----
 server <- function(input, output, session) {
-  server_employment_home(emp_ind_df, output, input, session)
-  employment_emp_ind_server( Exesum_employment_emp_ind_main, Exesum_employment_emp_ind, emp_ind_df, output, input)
+  server_employment_home(loaded_data$emp_data, output, input, session)
+  employment_emp_ind_server( Exesum_employment_emp_ind_main, 
+                             Exesum_employment_emp_ind, 
+                             loaded_data, 
+                             output, 
+                             input)
   }
 
 

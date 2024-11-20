@@ -138,6 +138,7 @@ ui_employment_emp_ind <- function(df1) {
                         summary     = "Exesum_employment_emp_ind_main"),
           fluidRow(
             h3("Employment Industry Deep-dive", style = "text-align: center;"),
+            tabsetPanel(    #Donough
             
               tabPanel("table",
                        feature_tab(df1,
@@ -145,7 +146,7 @@ ui_employment_emp_ind <- function(df1) {
                                    title             = "title",
                                    tab_feature_chart = ui_employment_emp_ind_feature_table,
                                    chart             = "employment_emp_ind_table")
-              )
+              #) DONOUGH: this one was extra, shoule be dropped
           ),
           
           # Job Gains Tab 
@@ -178,10 +179,8 @@ ui_employment_emp_ind <- function(df1) {
               $('html, body').animate({scrollTop: $(document).height()}, 800);
             });
           "))
-  )
+  )))
 }
-
-
 ui_job_gains_table <- function(chart, df1) {
   column(9,
          DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
@@ -221,8 +220,6 @@ ui_job_gains_table <- function(chart, df1) {
          )
   )
 }
-
-
 ui_job_losses_table <- function(chart, df1) {
   column(9,
          DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
@@ -261,8 +258,6 @@ ui_job_losses_table <- function(chart, df1) {
          )
   )
 }
-
-
 ui_employment_emp_ind_feature_table <- function(chart, df1){
   column(9,
          DT::dataTableOutput(chart ,height = "calc(100vh - 460px)" ),

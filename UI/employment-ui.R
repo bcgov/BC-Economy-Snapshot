@@ -137,24 +137,16 @@ ui_employment_emp_ind <- function(df1) {
                         source      = "Statistics Canada, Table 36-10-0480-01",
                         summary     = "Exesum_employment_emp_ind_main"),
           fluidRow(
-            h3("Employment Industry Deep-dive", style = "text-align: center;"),
-            tabsetPanel(    #Donough
+                    h3("Employment Industry Deep-dive", 
+                    style = "text-align: center;"),
+            tabsetPanel(    
             
-              tabPanel("table",
-                       feature_tab(df1,
-                                   tab_name          = "table",
-                                   title             = "title",
-                                   tab_feature_chart = ui_employment_emp_ind_feature_table,
-                                   chart             = "employment_emp_ind_table")
-              #) DONOUGH: this one was extra, shoule be dropped
-          ),
-          
           # Job Gains Tab 
           tabPanel("Job Gains",
                    
-                   feature_tab(df1,
+                   feature_tab(emp_data %>% filter (job_gain_dummy == 1), # pass filtered emp_data for job gains
                                tab_name          = "job_gains",
-                               title             = "Job Gains Summary",
+                               title             = textOutput("job_gains_header"), # Dynamic Title
                                tab_feature_chart = ui_job_gains_table,
                                chart             = "job_gains_table")
                    ),
@@ -162,9 +154,9 @@ ui_employment_emp_ind <- function(df1) {
           # Job Losses Tab
           tabPanel("Job Losses",
                    
-                   feature_tab(df1,
+                   feature_tab(emp_data %>% filter (job_loss_dummy == 1),
                                tab_name          = "job_losses",
-                               title             = "Job Losses Summary",
+                               title             = textOutput("job_losses_header"), # Dynamic Title
                                tab_feature_chart = ui_job_losses_table,
                                chart             = "job_losses_table")
           ),
@@ -181,7 +173,7 @@ ui_employment_emp_ind <- function(df1) {
           "))
   )))
 }
-ui_job_gains_table <- function(chart, df1) {
+ui_job_gains_table <- function(chart, emp_data) {
   column(9,
          DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
          # Source
@@ -194,7 +186,7 @@ ui_job_gains_table <- function(chart, df1) {
                     margin-bottom:    0px; 
                     height:           12px; 
                     font-size:        12px;",
-           "Source: Employment Data - Job Gains"
+           "Source: Statistics Canada 14-10-0355-02"
          ),
          # Inputs (if needed)
          fluidRow(
@@ -220,7 +212,7 @@ ui_job_gains_table <- function(chart, df1) {
          )
   )
 }
-ui_job_losses_table <- function(chart, df1) {
+ui_job_losses_table <- function(chart, emp_data) {
   column(9,
          DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
          # Source
@@ -233,7 +225,7 @@ ui_job_losses_table <- function(chart, df1) {
                     margin-bottom: 0px; 
                     height: 12px; 
                     font-size: 12px;",
-           "Source: Employment Data - Job Losses"
+           "Source: Statistics Canada 14-10-0355-02"
          ),
          # Inputs (if needed)
          fluidRow(
@@ -258,7 +250,7 @@ ui_job_losses_table <- function(chart, df1) {
          )
   )
 }
-ui_employment_emp_ind_feature_table <- function(chart, df1){
+ui_employment_emp_ind_feature_table <- function(chart, emp_data){
   column(9,
          DT::dataTableOutput(chart ,height = "calc(100vh - 460px)" ),
          # Source
@@ -280,13 +272,9 @@ ui_employment_emp_ind_feature_table <- function(chart, df1){
                   
                   column(4, div(class = "upward-dropdown", 
                                 selectInput("employment_emp_ind_table_geo", "", 
-                                            choices = unique(df1$geo), 
-                                            selected = "British Columbia" ))),
-                  
-                  column(4, div(class = "upward-dropdown", 
-                                selectInput("employment_emp_ind_table_parent", "", 
-                                            choices = unique(df1$parent_secor), 
-                                            selected = "business sector industries"))),
+                                            choices = unique(emp_data$parent_sector), 
+                                            selected = "goods" ))),
+
                   ),
          fluidRow(style = "background-color: #f2f2f2;
                            margin-right:     0px; 

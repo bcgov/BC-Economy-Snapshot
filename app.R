@@ -33,7 +33,7 @@ library(ggrepel)
 
 options(scipen = 999999999)  
 
-
+# Source external scripts 
 source(here("Charts/employment-charts.R"))
 source(here("Charts/standard-charts.R"))
 source(here("UI/home_ui.R"))
@@ -43,12 +43,8 @@ source(here("data-processing/texts/Executive_summaries.R"))
 
 
 # Loading data ----
-loaded_data   <- load_emp_ind()
+emp_data <- read.csv(here("data-processing/data/emp_ind_final.csv"), header = TRUE)
 
-# Extract individual datasets from loaded dataset
-  emp_ind_df <- loaded_data$emp_data
-  job_gains  <- loaded_data$job_gains
-  job_losses <- loaded_data$job_losses 
 
 # UI ----
 ui <- function() {
@@ -100,10 +96,10 @@ ui <- function() {
     tags$div(
       style = "margin-right:10px;",
       a(
-        href = "https://mehdinaji.shinyapps.io/BC-Economy-Snapshot/",
+        href  = "https://mehdinaji.shinyapps.io/BC-Economy-Snapshot/",
         class = "btn btn-primary",
         style = "color:white; background-color:#fcba19; border:none;",
-        "BC Economy Snapshot"
+                "BC Economy Snapshot"
       )
     )
   )
@@ -123,14 +119,26 @@ ui <- function() {
             a(
               href = "https://www2.gov.bc.ca/gov/content/home",
               "Home",
-              style = "font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;"
+              
+              style = "font-size:     1em; 
+                       font-weight:   normal; 
+                       color:         white; 
+                       padding-left:  5px; 
+                       padding-right: 5px; 
+                       border-right:  1px solid #4b5e7e;"
             )
           ),
           tags$li(
             a(
               href = "https://www2.gov.bc.ca/gov/content/home/disclaimer",
-              "Disclaimer",
-              style = "font-size:1em; font-weight:normal; color:white; padding-left:5px; padding-right:5px; border-right:1px solid #4b5e7e;"
+                     "Disclaimer",
+             
+              style = "font-size:    1em; 
+                      font-weight:   normal;  
+                      color:         white;  
+                      padding-left:  5px; 
+                      padding-right: 5px; 
+                      border-right:  1px solid #4b5e7e;"
             )
           )
         )
@@ -169,10 +177,10 @@ ui <- function() {
           tabPanel(
             "Employment Overview",
             ui_employment_home(
-              employment_emp_ind_lineplot_data(emp_ind_df)
+              employment_emp_ind_lineplot_data(emp_data)
             )
           ),
-            tabPanel("\xE2\x96\xB6 Employment Industry", ui_employment_emp_ind(emp_ind_df)),
+            tabPanel("\xE2\x96\xB6 Employment Industry", ui_employment_emp_ind(emp_data)),
             # tabPanel("\xE2\x96\xB6 Unemployment Rate", ui_m6_VAEX(df_m6_VAEX_1)),
             # tabPanel("\xE2\x96\xB6 Non-residential Investment", ui_m6_nRinv(df_m6_nRinv_1)),
             # tabPanel("\xE2\x96\xB6 Labour Productivity", ui_m6_LP(df_m6_LP_1)),
@@ -189,14 +197,11 @@ ui <- function() {
 
 # Server----
 server <- function(input, output, session) {
-  server_employment_home(loaded_data$emp_data, output, input, session)
-  employment_emp_ind_server( Exesum_employment_emp_ind_main, 
-                             Exesum_employment_emp_ind, 
-                             loaded_data, 
-                             output, 
-                             input)
+  server_employment_home(emp_data, output, input, session)
+  employment_emp_ind_server(emp_data, 
+                            output, 
+                            input)
   }
 
-
-
+# Run the Shiny App ---- 
 shinyApp(ui, server)

@@ -12,21 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # Loading data----
-    load_emp_ind <- function() {
-      emp_data   <- read.csv(here("data-processing/data/emp_ind.csv")       , header = TRUE)
-      job_gains  <- read.csv(here("data-processing/data/emp_job_gains.csv") , header = TRUE)
-      job_losses <- read.csv(here("data-processing/data/emp_job_losses.csv"), header = TRUE)
-      
-      # Ensure no missing values
-      emp_data   <- na.omit(emp_data)
-      job_gains  <- na.omit(job_gains)
-      job_losses <- na.omit(job_losses)
-      
-      # Return all the datasets in a named list
-      
-      return(list(emp_data = emp_data, job_gain = job_gains, job_losses = job_losses))
-      
-    }
+load_emp_ind <- function() {
+  emp_data      <- read.csv(here("data-processing/data/emp_ind_final.csv"), header = TRUE)
+    
+  # Ensure no missing values
+  emp_data      <- na.omit(emp_data)
+  
+  # Return all the datasets in a named list
+  return(emp_data) 
+  }
     
 
 # Employment Industry Dash----
@@ -53,9 +47,15 @@
     }
     
     employment_emp_ind_render_table <- function(df, input){
-      data <- employment_emp_ind_table_data(df, input$employment_emp_ind_table_geo, input$employment_emp_ind_table_parent)
-      DT::datatable(data, options = list(dom = 't'), escape = FALSE, rownames = FALSE, 
-                    caption = htmltools::tags$caption("",
+      data <- employment_emp_ind_table_data(df, 
+                                            input$employment_emp_ind_table_geo, 
+                                            input$employment_emp_ind_table_parent)
+      
+      DT::datatable(data, 
+                    options  = list(dom = 't'), 
+                    escape   = FALSE, 
+                    rownames = FALSE, 
+                    caption  = htmltools::tags$caption("",
                                                       style = "font-family: Arial; font-size: 12px;"))
     }
     

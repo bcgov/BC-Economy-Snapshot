@@ -114,7 +114,7 @@ dash_lineplot <- function(data_func, df, input, y_label = "") {
   tickvals <- seq(from = max(df1$date) - 60, to = max(df1$date), by = 5)
   
   p1 <- plot_ly(data = df1, x = ~date, y = ~value, type = 'scatter', mode = 'lines',
-                line = list(color = "#FEB70D", width = 4)) %>%
+                line = list(color = "#FEB70D", width = 4)) |>
     layout(
       xaxis = list(
         title = "",
@@ -568,9 +568,9 @@ mapchart <- function(df_map, input) {
   pal <- colorNumeric(palette = colors, domain = range(canada_map$VALUE, na.rm = TRUE))
   
   # Create the leaflet map focused on Canada
-  p2 <- leaflet(data = canada_map) %>%
+  p2 <- leaflet(data = canada_map) |>
     # Add default map tiles
-    addProviderTiles("CartoDB.PositronNoLabels") %>%
+    addProviderTiles("CartoDB.PositronNoLabels") |>
     
     # Add polygons with province borders and color fill based on values
     addPolygons(
@@ -579,7 +579,7 @@ mapchart <- function(df_map, input) {
       color = "#003366",   # Province border color
       weight = 1,
       popup = ~paste0("<b>", prov_name_en, "</b><br>Value: ", round(VALUE, 2))
-    ) %>%
+    ) |>
     
     # Add a legend for the values
     addLegend(
@@ -588,10 +588,10 @@ mapchart <- function(df_map, input) {
       opacity = 0.7,
       title = "Values by Province",
       position = "bottomright"
-    ) %>%
+    ) |>
     
     # Restrict the view to Canada by specifying latitude and longitude bounds
-    setView(lng = -106.3468, lat = 56.1304, zoom = 4) %>%
+    setView(lng = -106.3468, lat = 56.1304, zoom = 4) |>
     
     # Limit the map to focus only on Canada
     setMaxBounds(lng1 = -141, lat1 = 83, lng2 = -52, lat2 = 40)
@@ -619,16 +619,16 @@ mapchart <- function(df_map, input) {
 #   )
 #   
 #   # Create the leaflet map
-#   p2 <- leaflet(data = canada_map) %>%
-#     addTiles() %>%  # Add default OpenStreetMap tiles
+#   p2 <- leaflet(data = canada_map) |>
+#     addTiles() |>  # Add default OpenStreetMap tiles
 #     addPolygons(fillColor = ~pal(VALUE),
 #                 fillOpacity = 0.8,
 #                 color = "#003366",  # Border color for provinces
 #                 weight = 1,  # Border weight
-#                 popup = ~paste0("<b>", prov_name_en, "</b><br>Value: ", round(VALUE, 2))) %>%
-#     addLegend(pal = pal, values = ~VALUE, opacity = 0.7, title = "Values by Province", position = "bottomright")%>%
+#                 popup = ~paste0("<b>", prov_name_en, "</b><br>Value: ", round(VALUE, 2))) |>
+#     addLegend(pal = pal, values = ~VALUE, opacity = 0.7, title = "Values by Province", position = "bottomright")|>
 #       # Add a white background by adding a blank tile layer
-#       addProviderTiles("Stamen.TonerLite") %>%
+#       addProviderTiles("Stamen.TonerLite") |>
 #       addPolygons(fillColor = ~pal(canada_map$VALUE),
 #                   fillOpacity = 0.5,
 #                   color = "#003366",

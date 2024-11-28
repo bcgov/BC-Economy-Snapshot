@@ -144,7 +144,7 @@ ui_employment_emp_ind <- function(df1) {
           # Job Gains Tab 
           tabPanel("Job Gains",
                    
-                   feature_tab(emp_data %>% filter (job_gain_dummy == 1), # pass filtered emp_data for job gains
+                   feature_tab(emp_data |> filter (job_gain_dummy == 1), # pass filtered emp_data for job gains
                                tab_name          = "job_gains",
                                title             = textOutput("job_gains_header"), # Dynamic Title
                                tab_feature_chart = ui_job_gains_table,
@@ -154,7 +154,7 @@ ui_employment_emp_ind <- function(df1) {
           # Job Losses Tab
           tabPanel("Job Losses",
                    
-                   feature_tab(emp_data %>% filter (job_loss_dummy == 1),
+                   feature_tab(emp_data |> filter (job_loss_dummy == 1),
                                tab_name          = "job_losses",
                                title             = textOutput("job_losses_header"), # Dynamic Title
                                tab_feature_chart = ui_job_losses_table,

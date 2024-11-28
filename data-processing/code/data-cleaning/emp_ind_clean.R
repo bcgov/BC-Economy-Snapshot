@@ -15,11 +15,11 @@ library(here)
 emp_data <- statcan_download_data("14-10-0355-02", "eng")
   
 # Convert date format from text to Date object
-emp_data <- emp_data %>% 
+emp_data <- emp_data |>
   mutate(date = ymd(REF_DATE))  
     
 # Filter the data to only include relevant rows (Estimates and Seasonally Adjusted data)
-emp_data <- emp_data %>%
+emp_data <- emp_data |>
   filter(
    Statistics  == "Estimate",  # Use only 'Estimate' type rows
    `Data type` == "Seasonally adjusted",  # Use only seasonally adjusted data
@@ -27,7 +27,7 @@ emp_data <- emp_data %>%
   ) 
     
 # Select and rename columns for better readability
-emp_data <- emp_data  %>%
+emp_data <- emp_data  |>
  select(
   date, 
   geo   = GEO,  # Rename column 'GEO' to 'geo'
@@ -36,16 +36,16 @@ emp_data <- emp_data  %>%
  ) 
     
 # Convert 'value' from thousands to actual values
-emp_data <- emp_data %>%
+emp_data <- emp_data |>
  mutate(value = as.numeric(value) * 1000) 
   
 # Remove numbers and square brackets from 'naics' descriptions
-emp_data <- emp_data %>%
- mutate(naics = gsub("\\[.*?\\]", "", naics)) %>% 
+emp_data <- emp_data |>
+ mutate(naics = gsub("\\[.*?\\]", "", naics)) |>
  mutate(naics = trimws(naics))  # Remove any trailing or leading whitespace
   
 # Categorize sectors into broader categories
-emp_data <- emp_data %>%
+emp_data <- emp_data |>
  mutate(parent_sector = case_when(
   
  naics == "Total employed, all industries" ~ "all industries",
@@ -75,32 +75,32 @@ emp_data <- emp_data %>%
     )) 
     
 # Reorder the columns to improve readability
-emp_data <- emp_data %>%  
+emp_data <- emp_data |> 
   select(date, geo, parent_sector, naics, value, everything())
 
 
 # Ensure parent_sector is character type and remove NA value before filtering
-emp_data <- emp_data %>%
-  mutate(parent_sector = as.character(parent_sector)) %>%
+emp_data <- emp_data |>
+  mutate(parent_sector = as.character(parent_sector)) |>
   filter(!is.na(parent_sector))
 
 # Create dummy variable for observations with "goods" or "services" only
-emp_data <- emp_data %>%
+emp_data <- emp_data |>
   mutate(sect_dummy = if_else(parent_sector %in% c("goods", "services"), 1, 0))
 
 # Create a variable that examines the growth from the same month last year (Jan 24 vs. Jan 23)
-emp_data <- emp_data %>% 
-  arrange(geo, naics, date) %>%
-  group_by(geo, naics) %>% 
+emp_data <- emp_data |> 
+  arrange(geo, naics, date) |>
+  group_by(geo, naics) |>
   # Calculate job gains or losses compared to a lagged 12 month period
   mutate(
     emp_gr_num_12m = value - lag(value, 12), # Numerical change 12 months ago
     emp_gr_per_12m = ((value - lag(value, 12))/(lag(value, 12))) * 100 # Percentage change 12 months ago
-  ) %>%
+  ) |>
   ungroup() 
 
 # Job Gains and Job Losses dummy (growth in employment numbers from t-12) 
-emp_data <- emp_data %>% 
+emp_data <- emp_data |>
   mutate(
     job_gain_dummy = ifelse(emp_gr_num_12m > 0, 1, 0), # 1 if jobs increased from t-12 months ago
     job_loss_dummy = ifelse(emp_gr_num_12m < 0, 1, 0)  # 1 for job losses from t-12 months ago

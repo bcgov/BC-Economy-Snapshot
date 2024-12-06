@@ -21,9 +21,9 @@ emp_data <- emp_data |>
 # Filter the data to only include relevant rows (Estimates and Seasonally Adjusted data)
 emp_data <- emp_data |>
   filter(
-   Statistics  == "Estimate",  # Use only 'Estimate' type rows
+   Statistics  == "Estimate",             # Use only 'Estimate' type rows
    `Data type` == "Seasonally adjusted",  # Use only seasonally adjusted data
-   date        >= as.Date("2010-01-01")  # Filter to start from January 2010
+   date        >= as.Date("2010-01-01")   # Filter to start from January 2010
   ) 
     
 # Select and rename columns for better readability
@@ -106,9 +106,6 @@ emp_data <- emp_data |>
     job_loss_dummy = ifelse(emp_gr_num_12m < 0, 1, 0)  # 1 for job losses from t-12 months ago
   )
 
-
-#### TEMP CODE 
-
 # Find latest month in the data
 latest_month <- max(emp_data$date)
 
@@ -124,7 +121,23 @@ emp_data <- emp_data |>
     )
   )
 
-### END TEMP CODE 
+# Calculate share of total job gains and job losses
+emp_data <- emp_data  |> 
+  group_by(geo, date) |>
+  mutate(
+    share_of_total = ifelse(
+      
+      job_gain_dummy == 1, 
+      round((abs(emp_gr_num_12m) / sum(abs(emp_gr_num_12m[job_gain_dummy == 1]), na.rm = TRUE)) * 100, 1),
+      ifelse(
+        
+        job_loss_dummy == 1,
+        round((abs(emp_gr_num_12m) / sum(abs(emp_gr_num_12m[job_loss_dummy == 1]), na.rm = TRUE)) * 100, 1),
+        NA_real_
+      )
+    )
+  ) |>
+  ungroup()
 
 ## Save the dataset for future use
 write.csv(emp_data, here("data-processing/data/emp_ind_final.csv"), row.names = FALSE)

@@ -175,7 +175,7 @@ ui_employment_emp_ind <- function(df1) {
 }
 ui_job_gains_table <- function(chart, emp_data) {
   column(9,
-         DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
+         DT::dataTableOutput(chart, height = "calc(100vh - 300px)"),
          # Source
          fluidRow(
            style = "background-color: #f2f2f2; 
@@ -208,32 +208,32 @@ ui_job_gains_table <- function(chart, emp_data) {
               downloadButton("job_gains_table_dwnbtt", 
                               label = NULL, 
                               class = "btn-custom-black", 
-                              icon = icon("cloud-download-alt")))
+                              icon  = icon("cloud-download-alt")))
          )
   )
 }
 ui_job_losses_table <- function(chart, emp_data) {
   column(9,
-         DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
+         DT::dataTableOutput(chart, height = "1000px"),
          # Source
          fluidRow(
            style = "background-color: #f2f2f2; 
-                    padding-left: 80px; 
-                    padding-right: 40px; 
-                    margin-right: 0px; 
-                    margin-left: 0px; 
-                    margin-bottom: 0px; 
-                    height: 12px; 
-                    font-size: 12px;",
+                    padding-left:     80px; 
+                    padding-right:    40px; 
+                    margin-right:     0px; 
+                    margin-left:      0px; 
+                    margin-bottom:    0px; 
+                    height:           12px; 
+                    font-size:        12px;",
            "Source: Statistics Canada 14-10-0355-02"
          ),
          # Inputs (if needed)
          fluidRow(
            style = "background-color: #f2f2f2; 
-                    margin-right: 0px; 
-                    margin-left:  0px; 
-                    margin-top:   0px; 
-                    margin-left:  0px;",
+                    margin-right:     0px; 
+                    margin-left:      0px; 
+                    margin-top:       0px; 
+                    margin-left:      0px;",
            column(4),
            column(4),
            column(2),

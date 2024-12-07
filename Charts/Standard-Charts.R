@@ -694,7 +694,7 @@ go_to_button <- function(name1, label1, name2, label2) {
 )}
 
 
-feature_tab <- function(df, tab_name, title, tab_feature_chart, chart){  
+feature_tab <- function(df, tab_name, title, tab_feature_chart, chart, summary = NULL){  
   tabPanel(tab_name, 
            fluidPage(
              style = "background-color: white; padding-left: 20px; padding-top: 0px; margin: 0px;",

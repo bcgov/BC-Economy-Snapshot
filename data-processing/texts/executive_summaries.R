@@ -34,3 +34,13 @@ Exesum_employment_emp_ind <- HTML("
     <hr style='border: 1px solid #d3d3d3;' />
   </ul>
 ")
+
+Exesum_employment_emp_ind_waterfall <- HTML("
+  <ul style='text-align: justify; font-size: 12px;padding: 20px;'>
+    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
+    <hr style='border: 1px solid #d3d3d3;' />
+    <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+</li>
+    <hr style='border: 1px solid #d3d3d3;' />
+  </ul>
+")

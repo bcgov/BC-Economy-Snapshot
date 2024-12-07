@@ -224,5 +224,26 @@ output$job_losses_table <- DT::renderDataTable({
     
     p1
   })
-}
+
+  
+  ### waterfall----
+                                                         
+  output$Exesum_employment_emp_ind_waterfall <- renderUI(Exesum_employment_emp_ind_waterfall)
+  
+  output$employment_emp_ind_waterfall <- renderPlotly({
+    p1 <- employment_emp_ind_render_waterfall(emp_data, input)
+    p1
+    })
+  
+  output$employment_emp_ind_waterfall_dwnbtt <- downloadHandler(
+    filename = "Employment_waterfall.csv",
+    content = function(file){
+      df <- employment_emp_ind_waterfall_data(emp_data, input$employment_emp_ind_waterfall_data, input$employment_emp_ind_waterfall_geo)
+      write.csv(df, file)
+    }
+  ) 
+  
+  }
     
+
+

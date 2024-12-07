@@ -59,6 +59,57 @@ load_emp_ind <- function() {
                                                       style = "font-family: Arial; font-size: 12px;"))
     }
     
+    ## waterfall----
+    employment_emp_ind_waterfall_data <- function(df, inputdate, inputgeo) {
+     df2 <- df |>
+        group_by(geo, naics) |>
+        arrange(date) |>
+        mutate(
+          change = value - lag(value), 
+          percentagevalue = ifelse(lag(value) == 0 | is.na(lag(value)), NA, (change / lag(value)) * 100)
+        ) |>
+        ungroup() |>
+        select(
+          date,
+          geo,
+          parent_sector,
+          naics,
+          value,
+          change,
+          percentagevalue
+        )
+
+     df3 <- df2 |> 
+        filter(
+          date == inputdate,
+          geo == inputgeo,
+          parent_sector %in% c("services", "goods")
+        ) |>
+        arrange(desc(change)) |>
+        mutate(
+          naics = factor(naics, levels = unique(naics[order(-change)]))
+        )
+
+     return(df3)
+
+    }
+    
+    
+    employment_emp_ind_render_waterfall <- function(df, input){
+      df3 <- employment_emp_ind_waterfall_data(df, input$employment_emp_ind_waterfall_date, input$employment_emp_ind_waterfall_geo)
+      # df3 <- employment_emp_ind_waterfall_data(df, max(df$date), "Alberta")
+      
+      p   <- plot_ly(
+        df3,
+        type = "waterfall",
+        x = ~naics,
+        y = ~change,
+        # text = text_labels,
+        # textposition = "outside",
+        connector = list(line = list(color = "rgb(63, 63, 63)"))
+      )
+      return(p)
+      }
 
     
     

@@ -180,7 +180,7 @@ ui <- function() {
               employment_emp_ind_lineplot_data(emp_data)
             )
           ),
-            tabPanel("\xE2\x96\xB6 Employment Industry", ui_employment_emp_ind(emp_data)),
+            tabPanel("\xE2\x96\xB6 Employment Industry", ui_employment_emp_ind(emp_data))
             # tabPanel("\xE2\x96\xB6 Unemployment Rate", ui_m6_VAEX(df_m6_VAEX_1)),
             # tabPanel("\xE2\x96\xB6 Non-residential Investment", ui_m6_nRinv(df_m6_nRinv_1)),
             # tabPanel("\xE2\x96\xB6 Labour Productivity", ui_m6_LP(df_m6_LP_1)),

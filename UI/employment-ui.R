@@ -128,54 +128,10 @@ ui_employment_home <- function(df1) {
 
 
 ### emp_ind ----
-ui_employment_emp_ind <- function(df1) {
-  tabItem(tabName = "emp_ind",
-          
-          ui_main_chart(title       = "Industry Employment",
-                        chart_name  = "employment_emp_ind_lineplot",
-                        button_name = "employment_emp_ind_lineplot_dwnbtt",
-                        source      = "Statistics Canada, Table 36-10-0480-01",
-                        summary     = "Exesum_employment_emp_ind_main"),
-          fluidRow(
-                    h3("Employment Industry Deep-dive", 
-                    style = "text-align: center;"),
-            tabsetPanel(    
-            
-          # Job Gains Tab 
-          tabPanel("Job Gains",
-                   
-                   feature_tab(emp_data |> filter (job_gain_dummy == 1), # pass filtered emp_data for job gains
-                               tab_name          = "job_gains",
-                               title             = textOutput("job_gains_header"), # Dynamic Title
-                               tab_feature_chart = ui_job_gains_table,
-                               chart             = "job_gains_table")
-                   ),
-          
-          # Job Losses Tab
-          tabPanel("Job Losses",
-                   
-                   feature_tab(emp_data |> filter (job_loss_dummy == 1),
-                               tab_name          = "job_losses",
-                               title             = textOutput("job_losses_header"), # Dynamic Title
-                               tab_feature_chart = ui_job_losses_table,
-                               chart             = "job_losses_table")
-          ),
-          
-          # Scroll buttons for navigation
-          tags$script(HTML("
-            $(document).on('click', '#go_to_main_chart', function() {
-              $('html, body').animate({scrollTop: $('.scroll-section:eq(0)').offset().top}, 800);
-            });
 
-            $(document).on('click', '#go_to_deep_dive', function() {
-              $('html, body').animate({scrollTop: $(document).height()}, 800);
-            });
-          "))
-  )))
-}
-ui_job_gains_table <- function(chart, emp_data) {
+ui_job_gains_table <- function(chart, df1) {
   column(9,
-         DT::dataTableOutput(chart, height = "calc(100vh - 300px)"),
+         DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
          # Source
          fluidRow(
            style = "background-color: #f2f2f2; 
@@ -186,7 +142,7 @@ ui_job_gains_table <- function(chart, emp_data) {
                     margin-bottom:    0px; 
                     height:           12px; 
                     font-size:        12px;",
-           "Source: Statistics Canada 14-10-0355-02"
+           "Source: Employment Data - Job Gains"
          ),
          # Inputs (if needed)
          fluidRow(
@@ -208,32 +164,32 @@ ui_job_gains_table <- function(chart, emp_data) {
               downloadButton("job_gains_table_dwnbtt", 
                               label = NULL, 
                               class = "btn-custom-black", 
-                              icon  = icon("cloud-download-alt")))
+                              icon = icon("cloud-download-alt")))
          )
   )
 }
-ui_job_losses_table <- function(chart, emp_data) {
+ui_job_losses_table <- function(chart, df1) {
   column(9,
-         DT::dataTableOutput(chart, height = "1000px"),
+         DT::dataTableOutput(chart, height = "calc(100vh - 460px)"),
          # Source
          fluidRow(
            style = "background-color: #f2f2f2; 
-                    padding-left:     80px; 
-                    padding-right:    40px; 
-                    margin-right:     0px; 
-                    margin-left:      0px; 
-                    margin-bottom:    0px; 
-                    height:           12px; 
-                    font-size:        12px;",
-           "Source: Statistics Canada 14-10-0355-02"
+                    padding-left: 80px; 
+                    padding-right: 40px; 
+                    margin-right: 0px; 
+                    margin-left: 0px; 
+                    margin-bottom: 0px; 
+                    height: 12px; 
+                    font-size: 12px;",
+           "Source: Employment Data - Job Losses"
          ),
          # Inputs (if needed)
          fluidRow(
            style = "background-color: #f2f2f2; 
-                    margin-right:     0px; 
-                    margin-left:      0px; 
-                    margin-top:       0px; 
-                    margin-left:      0px;",
+                    margin-right: 0px; 
+                    margin-left:  0px; 
+                    margin-top:   0px; 
+                    margin-left:  0px;",
            column(4),
            column(4),
            column(2),
@@ -250,7 +206,7 @@ ui_job_losses_table <- function(chart, emp_data) {
          )
   )
 }
-ui_employment_emp_ind_feature_table <- function(chart, emp_data){
+ui_employment_emp_ind_feature_table <- function(chart, df1){
   column(9,
          DT::dataTableOutput(chart ,height = "calc(100vh - 460px)" ),
          # Source
@@ -272,9 +228,13 @@ ui_employment_emp_ind_feature_table <- function(chart, emp_data){
                   
                   column(4, div(class = "upward-dropdown", 
                                 selectInput("employment_emp_ind_table_geo", "", 
-                                            choices = unique(emp_data$parent_sector), 
-                                            selected = "goods" ))),
-
+                                            choices = unique(df1$geo), 
+                                            selected = "British Columbia" ))),
+                  
+                  column(4, div(class = "upward-dropdown", 
+                                selectInput("employment_emp_ind_table_parent", "", 
+                                            choices = unique(df1$parent_secor), 
+                                            selected = "business sector industries"))),
                   ),
          fluidRow(style = "background-color: #f2f2f2;
                            margin-right:     0px; 
@@ -296,6 +256,109 @@ ui_employment_emp_ind_feature_table <- function(chart, emp_data){
                                         icon = icon("cloud-download-alt")))),
   )
 }
+ui_employment_emp_ind_feature_waterfall <- function(chart, df1) {
+  column(9,
+         plotlyOutput(chart ,height = "calc(100vh - 460px)" ),
+         # Source
+         fluidRow(style = "background-color: #f2f2f2; 
+                           padding-left:     80px; 
+                           padding-right:    40px; 
+                           margin-right:     0px;
+                           margin-left:      0px; 
+                           margin-buttom:    0px; 
+                           height:           12px; 
+                           font-size:        12px;", 
+                  "Source: Statistics Canada, Table 36-10-0480-01"),
+         # inputs
+         fluidRow(style = "background-color: #f2f2f2;
+                           margin-right:     0px; 
+                           margin-left:      0px;
+                           margin-top:       0px; 
+                           margin-left:      0px;",
+                  
+                  column(4, div(class = "upward-dropdown", 
+                                selectInput("employment_emp_ind_waterfall_date", "", 
+                                            choices = unique(df1$date), 
+                                            selected = max(df1$date) ))),
+                  
+                  column(4, div(class = "upward-dropdown", 
+                                selectInput("employment_emp_ind_waterfall_geo", "", 
+                                            choices = unique(df1$geo), 
+                                            selected = "British Columbia" ))),
+                  
+                  column(2),
+                  column(2, style = "background-color: #f2f2f2; 
+                                     height:              20px; 
+                                     padding-top:         40px; 
+                                     display:             flex; 
+                                     justify-content:   center; 
+                                     align-items:       center;", 
+                         downloadButton("employment_emp_ind_waterfall_dwnbtt", 
+                                        label = NULL, 
+                                        class = "btn-custom-black", 
+                                        icon = icon("cloud-download-alt")))
+         )
+  )
+}
+ui_employment_emp_ind <- function(df1) {
+  tabItem(tabName = "emp_ind",
+          
+          ui_main_chart(title       = "Industry Employment",
+                        chart_name  = "employment_emp_ind_lineplot",
+                        button_name = "employment_emp_ind_lineplot_dwnbtt",
+                        source      = "Statistics Canada, Table 36-10-0480-01",
+                        summary     = "Exesum_employment_emp_ind_main"),
+          fluidRow(
+            h3("Employment Industry Deep-dive", style = "text-align: center;"),
+            tabsetPanel(    #Donough
+              
+              tabPanel("table",
+                       feature_tab(df1,
+                                   tab_name          = "table",
+                                   title             = "title",
+                                   tab_feature_chart = ui_employment_emp_ind_feature_table,
+                                   chart             = "employment_emp_ind_table")
+                       #) DONOUGH: this one was extra, shoule be dropped
+              ),
+              
+              # Job Gains Tab 
+              tabPanel("Job Gains",
+                       
+                       feature_tab(df1,
+                                   tab_name          = "job_gains",
+                                   title             = "Job Gains Summary",
+                                   tab_feature_chart = ui_job_gains_table,
+                                   chart             = "job_gains_table")
+              ),
+              
+              # Job Losses Tab
+              tabPanel("Job Losses",
+                       
+                       feature_tab(df1,
+                                   tab_name          = "job_losses",
+                                   title             = "Job Losses Summary",
+                                   tab_feature_chart = ui_job_losses_table,
+                                   chart             = "job_losses_table")
+              ),
+              # waterfall
+              tabPanel("waterfall",
+                       feature_tab(df1,
+                                   tab_name          = "waterfall",
+                                   title             = "Waterfall",
+                                   tab_feature_chart = ui_employment_emp_ind_feature_waterfall,
+                                   chart             = "employment_emp_ind_waterfall",
+                                   summary           = "Exesum_employment_emp_ind_waterfall")
+              ),
+              
+              # Scroll buttons for navigation
+              tags$script(HTML("
+            $(document).on('click', '#go_to_main_chart', function() {
+              $('html, body').animate({scrollTop: $('.scroll-section:eq(0)').offset().top}, 800);
+            });
 
-
-
+            $(document).on('click', '#go_to_deep_dive', function() {
+              $('html, body').animate({scrollTop: $(document).height()}, 800);
+            });
+          "))
+            )))
+}
